@@ -17,7 +17,8 @@ module.exports = {
         allowNull: false,
       },
       price: {
-        type: Sequelize.FLOAT,
+        // Deverá ser decimal
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
       created_at: {

@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 // Importando controllers
 import PlanController from './app/controllers/PlanController';
+import RegistrationController from './app/controllers/RegistrationController';
 import SessionController from './app/controllers/SessionController';
 import StudentController from './app/controllers/StudentController';
 
@@ -16,6 +17,7 @@ routes.use(AuthMiddlewares);
 
 // Create
 routes.post('/plan', PlanController.store);
+routes.post('/registration', RegistrationController.store);
 routes.post('/students', StudentController.store);
 
 // Read

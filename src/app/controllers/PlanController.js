@@ -1,5 +1,6 @@
 // Listagem, cadastro, atualização, remoção de planos
 
+import * as Yup from 'yup';
 import Plan from '../models/Plan';
 
 class PlanController {
@@ -23,6 +24,20 @@ class PlanController {
 
   // Create
   async store(req, res) {
+    const schema = Yup.object().shape({
+      title: Yup.string().required(),
+      duration: Yup.number()
+        .positive()
+        .required(),
+      price: Yup.number()
+        .positive()
+        .required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(401).json({ error: 'Validation is Fail' });
+    }
+
     const { title, duration, price } = await Plan.create(req.body);
     return res.json({ title, duration, price });
   }
@@ -30,6 +45,20 @@ class PlanController {
   // Update
   async update(req, res) {
     const plan = await Plan.findByPk(req.params.id);
+
+    if (!plan) {
+      return res.status(400).json('The plan not was found');
+    }
+
+    const schema = Yup.object().shape({
+      title: Yup.string(),
+      duration: Yup.number().positive(),
+      price: Yup.number().positive(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(401).json('Validation fails');
+    }
 
     const updatedPlan = await plan.update(req.body);
 
@@ -39,6 +68,10 @@ class PlanController {
   // Delete
   async delete(req, res) {
     const plan = await Plan.findByPk(req.params.id);
+    if (!plan) {
+      return res.status(400).json('Then plan was not found');
+    }
+
     plan.destroy();
     return res.status(200).json('The plan has been deleted');
   }

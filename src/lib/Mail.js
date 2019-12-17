@@ -1,5 +1,6 @@
 // Setting up email sending
 import nodemailer from 'nodemailer';
+
 import { resolve } from 'path';
 
 // Import modules into templates
@@ -30,7 +31,7 @@ class Mail {
         viewEngine: exphbs.create({
           layoutsDir: resolve(viewPath, 'layouts'),
           partialsDir: resolve(viewPath, 'partials'),
-          defaultLayout: 'default',
+          defaultLayout: 'default.hbs',
           extname: '.hbs',
         }),
         viewPath,

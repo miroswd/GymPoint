@@ -7,6 +7,8 @@ import Register from '../models/Register';
 import Plan from '../models/Plan';
 import Student from '../models/Students';
 
+import Mail from '../../lib/Mail';
+
 class RegisterController {
   async index(req, res) {
     const register = await Register.findAll();
@@ -42,15 +44,24 @@ class RegisterController {
     const { student_id, plan_id, start_date } = req.body;
 
     // Validating if the student is registered in the database
-    const studentExists = await Student.findByPk(student_id);
-    if (!studentExists) {
+    const student = await Student.findByPk(student_id);
+    if (!student) {
       return res.status(400).json({ error: 'The student does not exists' });
     }
 
     // Validating if the plan is registered in the database
-    const planExists = await Plan.findByPk(plan_id);
-    if (!planExists) {
+    const plan = await Plan.findByPk(plan_id);
+    if (!plan) {
       return res.status(400).json({ error: 'The plan does not exists' });
+    }
+
+    // Validating if student_id register already exists
+    const registerExists = await Register.findOne({
+      where: { student_id: req.body.student_id },
+    });
+
+    if (registerExists) {
+      return res.status(401).json({ error: 'The register already exists' });
     }
 
     // Validating if the start_date is in future
@@ -60,8 +71,27 @@ class RegisterController {
       return res.status(401).json({ error: 'The date is past' });
     }
 
-    const register = await Register.create(req.body);
-    return res.json(register);
+    const { id, end_date, price } = await Register.create(req.body);
+    const { name, email } = student;
+    const { title } = plan;
+    // Sending email
+
+    await Mail.sendMail({
+      to: `${name} <${email}>`,
+      subject: 'Bem-vindo(a) ao GymPoint',
+      text: 'Você está matriculado(a)',
+    });
+
+    return res.json({
+      id,
+      plan_id,
+      title,
+      name,
+      email,
+      start_date,
+      end_date,
+      price,
+    });
   }
 
   async update(req, res) {

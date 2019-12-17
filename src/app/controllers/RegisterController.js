@@ -1,6 +1,6 @@
 // Importing modules
-import { startOfDay, endOfDay, isBefore, parseISO, format } from 'date-fns';
-// import { pt } from 'date-fns/locale/pt';
+import { startOfDay, isBefore, parseISO, format } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 import * as Yup from 'yup';
 
 // Importing models
@@ -76,15 +76,14 @@ class RegisterController {
     const { id, price, end_date } = await Register.create(req.body);
 
     const { name, email } = student;
-    const { title } = plan;
+    const { title, duration } = plan;
 
-    // const { end_date, price } = register;
+    /*
     const first = startOfDay(parseISO(start_date));
     const firstDay = format(first, 'dd');
+    */
 
-    const last = endOfDay(parseISO(end_date));
-    console.log(`>>>>>>>${first} >>>>> ${last}`);
-    // const lastDay = format(last, 'MMMM');
+    const lastDay = format(end_date, "dd 'de' MMMM 'de' yyyy", { locale: pt });
 
     // Sending email
 
@@ -95,8 +94,9 @@ class RegisterController {
       context: {
         name,
         title,
-        firstDay,
-        // lastDay,
+        // firstDay,
+        lastDay,
+        duration,
         price,
       },
     });

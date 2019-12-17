@@ -1,5 +1,6 @@
 // Importing modules
-import { startOfDay, isBefore, parseISO } from 'date-fns';
+import { startOfDay, endOfDay, isBefore, parseISO, format } from 'date-fns';
+// import { pt } from 'date-fns/locale/pt';
 import * as Yup from 'yup';
 
 // Importing models
@@ -56,11 +57,11 @@ class RegisterController {
     }
 
     // Validating if student_id register already exists
-    const registerExists = await Register.findOne({
+    const register = await Register.findOne({
       where: { student_id: req.body.student_id },
     });
 
-    if (registerExists) {
+    if (register) {
       return res.status(401).json({ error: 'The register already exists' });
     }
 
@@ -71,15 +72,33 @@ class RegisterController {
       return res.status(401).json({ error: 'The date is past' });
     }
 
-    const { id, end_date, price } = await Register.create(req.body);
+    // Generete variables
+    const { id, price, end_date } = await Register.create(req.body);
+
     const { name, email } = student;
     const { title } = plan;
+
+    // const { end_date, price } = register;
+    const first = startOfDay(parseISO(start_date));
+    const firstDay = format(first, 'dd');
+
+    const last = endOfDay(parseISO(end_date));
+    console.log(`>>>>>>>${first} >>>>> ${last}`);
+    // const lastDay = format(last, 'MMMM');
+
     // Sending email
 
     await Mail.sendMail({
       to: `${name} <${email}>`,
       subject: 'Bem-vindo(a) ao GymPoint',
-      text: 'Você está matriculado(a)',
+      template: 'welcome',
+      context: {
+        name,
+        title,
+        firstDay,
+        // lastDay,
+        price,
+      },
     });
 
     return res.json({

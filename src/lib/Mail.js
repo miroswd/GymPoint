@@ -1,5 +1,6 @@
 // Setting up email sending
 import nodemailer from 'nodemailer';
+
 import { resolve } from 'path';
 
 // Import modules into templates
@@ -23,14 +24,15 @@ class Mail {
   }
 
   configureTemplates() {
-    const viewPath = resolve(__dirname, '..','app','views','emails');
+
+    const viewPath = resolve(__dirname, '..', 'app', 'views', 'emails');
     this.transporter.use(
       'compile',
       nodemailerhbs({
         viewEngine: exphbs.create({
           layoutsDir: resolve(viewPath, 'layouts'),
           partialsDir: resolve(viewPath, 'partials'),
-          defaultLayout: 'default',
+          defaultLayout: 'default.hbs',
           extname: '.hbs',
         }),
         viewPath,

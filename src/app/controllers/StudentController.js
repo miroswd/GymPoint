@@ -4,6 +4,30 @@ import * as Yup from 'yup';
 import Student from '../models/Students';
 
 class StudentController {
+  // Listing all students
+  async index(req, res) {
+    const { page = 1 } = req.query;
+    const students = await Student.findAll({
+      order: ['created_at'],
+      limit: 20,
+      offset: (page - 1) * 20,
+      attributes: ['id', 'name', 'email', 'height', 'weight'],
+    });
+    return res.json(students);
+  }
+
+  // Listing only one student
+  async show(req, res) {
+    const student = await Student.findByPk(req.params.id, {
+      attributes: ['id', 'name', 'email', 'height', 'weight'],
+    });
+
+    if (!student) {
+      return res.status(400).json({ error: 'The student does not exists' });
+    }
+    return res.json(student);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),

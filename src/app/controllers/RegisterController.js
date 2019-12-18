@@ -12,12 +12,28 @@ import Mail from '../../lib/Mail';
 
 class RegisterController {
   async index(req, res) {
-    const register = await Register.findAll();
+    const { page = 1 } = req.query;
+    const register = await Register.findAll({
+      attributes: ['id', 'start_date', 'end_date', 'price'],
+      order: ['start_date'],
+      limit: 20,
+      offset: (page - 1) * 20,
+      /*
+      include: [
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['id', 'title', 'duration', 'price'],
+        },
+      ], */
+    });
     return res.json(register);
   }
 
   async show(req, res) {
-    const register = await Register.findOne({ where: { id: req.params.id } });
+    const register = await Register.findByPk(req.params.id, {
+      attributes: ['id', 'start_date', 'end_date', 'price'],
+    });
     if (!register) {
       return res.status(400).json({ error: 'The register does not found' });
     }

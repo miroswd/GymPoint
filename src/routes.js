@@ -27,6 +27,8 @@ routes.get('/registers', RegisterController.index);
 
 // Read only
 routes.get('/register/:id', RegisterController.show);
+routes.get('/students', StudentController.index);
+routes.get('/student/:id', StudentController.show);
 
 // Update
 routes.put('/plan/:id/update', PlanController.update);

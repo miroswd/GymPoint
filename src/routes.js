@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 // Importando controllers
+import CheckinController from './app/controllers/CheckinController';
 import PlanController from './app/controllers/PlanController';
 import RegisterController from './app/controllers/RegisterController';
 import SessionController from './app/controllers/SessionController';
@@ -16,6 +17,7 @@ routes.post('/session', SessionController.store);
 routes.use(AuthMiddlewares);
 
 // Create
+routes.post('/checkins/:id', CheckinController.store);
 routes.post('/plan', PlanController.store);
 routes.post('/register', RegisterController.store);
 routes.post('/students', StudentController.store);

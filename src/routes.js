@@ -2,6 +2,8 @@ import { Router } from 'express';
 
 // Importando controllers
 import CheckinController from './app/controllers/CheckinController';
+import HelpOrderController from './app/controllers/HelpOrderController';
+import HelpOrderAnswerController from './app/controllers/HelpOrderAnswerController';
 import PlanController from './app/controllers/PlanController';
 import RegisterController from './app/controllers/RegisterController';
 import SessionController from './app/controllers/SessionController';
@@ -12,8 +14,14 @@ import AuthMiddlewares from './app/middlewares/auth';
 
 const routes = new Router();
 
-// Auth
+// Admin login
 routes.post('/session', SessionController.store);
+
+// Student question
+routes.get('/students/:id/help-orders', HelpOrderController.index);
+routes.post('/students/:id/help-orders', HelpOrderController.store);
+
+// Requires Auth
 routes.use(AuthMiddlewares);
 
 // Create
@@ -24,6 +32,7 @@ routes.post('/students', StudentController.store);
 
 // Read
 routes.get('/plans', PlanController.index);
+routes.get('/unanswered/questions', HelpOrderAnswerController.index);
 routes.get('/plan/:id', PlanController.show);
 routes.get('/registers', RegisterController.index);
 
@@ -33,6 +42,7 @@ routes.get('/students', StudentController.index);
 routes.get('/student/:id', StudentController.show);
 
 // Update
+routes.put('/help-orders/:id/answer', HelpOrderAnswerController.update); // Question id
 routes.put('/plan/:id/update', PlanController.update);
 routes.put('/register/:id', RegisterController.update);
 routes.put('/students/:id', StudentController.update);

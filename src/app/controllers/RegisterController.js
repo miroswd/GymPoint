@@ -1,6 +1,5 @@
 // Importing modules
-import { startOfDay, isBefore, parseISO, format } from 'date-fns';
-import pt from 'date-fns/locale/pt';
+import { startOfDay, isBefore, parseISO } from 'date-fns';
 import * as Yup from 'yup';
 
 // Importing models
@@ -8,7 +7,9 @@ import Register from '../models/Register';
 import Plan from '../models/Plan';
 import Student from '../models/Students';
 
-import Mail from '../../lib/Mail';
+// Importing Queue
+import RegisterMail from '../jobs/RegisterMail';
+import Queue from '../../lib/Queue';
 
 class RegisterController {
   async index(req, res) {
@@ -58,75 +59,57 @@ class RegisterController {
       return res.status(401).json({ error: 'Validation fails' });
     }
 
-    const { student_id, plan_id, start_date } = req.body;
+    const { student_id, plan_id } = req.body;
 
     // Validating if the student is registered in the database
-    const student = await Student.findByPk(student_id);
-    if (!student) {
+    const studentExists = await Student.findByPk(student_id);
+    if (!studentExists) {
       return res.status(400).json({ error: 'The student does not exists' });
     }
 
     // Validating if the plan is registered in the database
-    const plan = await Plan.findByPk(plan_id);
-    if (!plan) {
+    const planExists = await Plan.findByPk(plan_id);
+    if (!planExists) {
       return res.status(400).json({ error: 'The plan does not exists' });
     }
 
     // Validating if student_id register already exists
-    const register = await Register.findOne({
+    const registerExists = await Register.findOne({
       where: { student_id: req.body.student_id },
     });
 
-    if (register) {
+    if (registerExists) {
       return res.status(401).json({ error: 'The register already exists' });
     }
+
+    const { start_date } = req.body;
 
     // Validating if the start_date is in future
     const startPast = startOfDay(parseISO(start_date)); // Timestamp
     const actualDate = startOfDay(new Date());
+
     if (isBefore(startPast, actualDate)) {
       return res.status(401).json({ error: 'The date is past' });
     }
 
     // Generete variables
-    const { id, price, end_date } = await Register.create(req.body);
 
-    const { name, email } = student;
-    const { title, duration } = plan;
+    const register = await Register.create({
+      ...req.body,
+      start_date: startPast,
+    });
 
-    /*
-    const first = startOfDay(parseISO(start_date));
-    const firstDay = format(first, 'dd');
-    */
-
-    const lastDay = format(end_date, "dd 'de' MMMM 'de' yyyy", { locale: pt });
+    // const student = await register.getStudent();
+    // const plan = await register.getPlan();
 
     // Sending email
-
-    await Mail.sendMail({
-      to: `${name} <${email}>`,
-      subject: 'Bem-vindo(a) ao GymPoint',
-      template: 'welcome',
-      context: {
-        name,
-        title,
-        // firstDay,
-        lastDay,
-        duration,
-        price,
-      },
+    await Queue.add(RegisterMail.key, {
+      // student,
+      // plan,
+      registerExists: register,
     });
 
-    return res.json({
-      id,
-      plan_id,
-      title,
-      name,
-      email,
-      start_date,
-      end_date,
-      price,
-    });
+    return res.json(register);
   }
 
   async update(req, res) {

@@ -3,6 +3,10 @@ import * as Yup from 'yup';
 
 // Importing models
 import HelpOrder from '../models/HelpOrder';
+import Student from '../models/Students';
+// Importing Queue
+import Queue from '../../lib/Queue';
+import HelpOrderMail from '../jobs/HelpOrderMail';
 
 class HelpOrderAnswerController {
   // Listing unanswered questions
@@ -14,6 +18,10 @@ class HelpOrderAnswerController {
       order: ['created_at'],
       limit: 10,
       offset: (page - 1) * 20,
+      include: {
+        model: Student,
+        as: 'student',
+      },
     });
     return res.json(unanswered);
   }
@@ -28,24 +36,27 @@ class HelpOrderAnswerController {
       return res.status(401).json({ error: 'Validation fails' });
     }
 
-    const question = await HelpOrder.findByPk(req.params.id);
-    if (!question) {
+    const helpOrder = await HelpOrder.findByPk(req.params.id);
+    if (!helpOrder) {
       return res.status(400).json({ error: 'The question does not exists' });
     }
 
-    if (question.answer !== null) {
+    if (helpOrder.answer !== null) {
       return res
         .status(401)
         .json({ error: 'The question has already been answered' });
     }
 
     const { answer } = req.body;
-    const answer_at = question.answerAt;
-    const updated_at = question.updatedAt;
 
-    await question.update(answer);
+    const updated = await helpOrder.update({ answer });
 
-    return res.json({ answer_at, updated_at });
+    await Queue.add(HelpOrderMail.key, {
+      helpOrder: updated,
+      student: Student,
+    });
+
+    return res.json(updated);
   }
 }
 

@@ -4,8 +4,11 @@ import * as Yup from 'yup';
 // Importing models
 import HelpOrder from '../models/HelpOrder';
 import Student from '../models/Students';
+
 // Importing Queue
 import Queue from '../../lib/Queue';
+
+// Importing job
 import HelpOrderMail from '../jobs/HelpOrderMail';
 
 class HelpOrderAnswerController {
@@ -37,6 +40,7 @@ class HelpOrderAnswerController {
     }
 
     const helpOrder = await HelpOrder.findByPk(req.params.id);
+    
     if (!helpOrder) {
       return res.status(400).json({ error: 'The question does not exists' });
     }
@@ -50,10 +54,11 @@ class HelpOrderAnswerController {
     const { answer } = req.body;
 
     const updated = await helpOrder.update({ answer });
+    
+    await updated.save();
 
     await Queue.add(HelpOrderMail.key, {
-      helpOrder: updated,
-      student: Student,
+      helpOrder,
     });
 
     return res.json(updated);

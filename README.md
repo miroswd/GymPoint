@@ -4,4 +4,5 @@
 ```js
 $ sudo docker start database
 >>> yarn dev
+>>> yarn queue
 ```

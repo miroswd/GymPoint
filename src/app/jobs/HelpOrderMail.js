@@ -2,12 +2,12 @@ import Mail from '../../lib/Mail';
 
 class HelpOrderMail {
   get key() {
-    return 'HelpOrderMail';
+    return 'HelpOrderMail'; // Unique key
   }
 
   async handle({ data }) {
+    // Task to be performed
     const { student, helpOrder } = data;
-    console.log('Chegou até aqui');
     await Mail.sendMail({
       to: `${student.name} <${student.email}>`,
       subject: 'Question Answered',

@@ -3,6 +3,7 @@
 
 ```js
 $ sudo docker start database
+$ sudo docker start redisbarber
 >>> yarn dev
 >>> yarn queue
 ```

@@ -38,23 +38,35 @@ class PlanController {
       return res.status(401).json({ error: 'Validation is Fail' });
     }
 
+    const planExists = await Plan.findOne({ where: { title: req.body.title } });
+
+    if (planExists) {
+      return res.status(401).json({ error: 'The plan already exists' });
+    }
+
     const { title, duration, price } = await Plan.create(req.body);
     return res.json({ title, duration, price });
   }
 
   // Update
   async update(req, res) {
+    const schema = Yup.object().shape({
+      title: Yup.string(),
+      duration: Yup.number().positive(),
+      price: Yup.number().positive(),
+    });
+
     const plan = await Plan.findByPk(req.params.id);
 
     if (!plan) {
       return res.status(400).json('The plan not was found');
     }
 
-    const schema = Yup.object().shape({
-      title: Yup.string(),
-      duration: Yup.number().positive(),
-      price: Yup.number().positive(),
-    });
+    const planExists = await Plan.findOne({ where: { title: req.body.title } });
+
+    if (planExists) {
+      return res.status(401).json({ error: 'The plan already exists' });
+    }
 
     if (!(await schema.isValid(req.body))) {
       return res.status(401).json('Validation fails');

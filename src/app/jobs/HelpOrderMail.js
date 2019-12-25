@@ -8,11 +8,8 @@ class HelpOrderMail {
   async handle({ data }) {
     // Task to be performed
     const { student, helpOrder } = data;
-      
-    console.log("tarefa executada")
-    
     await Mail.sendMail({
-      to: `${student.name} ${student.email}`,
+      to: `${student.name} <${student.email}>`,
       subject: 'Question Answered',
       template: 'helporder',
       context: {

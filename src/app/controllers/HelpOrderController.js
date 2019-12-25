@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 
 // Importing models
 import HelpOrder from '../models/HelpOrder';
-import Students from '../models/Students';
+import Student from '../models/Student';
 
 class HelpOrderController {
   // Listing all student questions
@@ -32,7 +32,7 @@ class HelpOrderController {
     }
 
     const student_id = req.params.id;
-    const student = await Students.findByPk(student_id);
+    const student = await Student.findByPk(student_id);
 
     // Validating if the student exists
     if (!student) {

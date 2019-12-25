@@ -3,7 +3,8 @@ import * as Yup from 'yup';
 
 // Importing models
 import HelpOrder from '../models/HelpOrder';
-import Student from '../models/Students';
+
+import Student from '../models/Student';
 
 // Importing Queue
 import Queue from '../../lib/Queue';
@@ -15,17 +16,19 @@ class HelpOrderAnswerController {
   // Listing unanswered questions
   async index(req, res) {
     const { page = 1 } = req.query;
+
     const unanswered = await HelpOrder.findAll({
       where: { answer: null },
       attributes: ['id', 'student_id', 'question', 'created_at'],
       order: ['created_at'],
       limit: 10,
-      offset: (page - 1) * 20,
+      offset: (page - 1) * 10,
       include: {
         model: Student,
         as: 'student',
       },
     });
+
     return res.json(unanswered);
   }
 
@@ -58,7 +61,8 @@ class HelpOrderAnswerController {
     await updated.save();
 
     await Queue.add(HelpOrderMail.key, {
-      helpOrder,
+      helpOrder: updated,
+      student: await updated.getStudent(),
     });
 
     return res.json(updated);

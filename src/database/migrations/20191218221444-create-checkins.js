@@ -3,18 +3,15 @@ module.exports = {
     return queryInterface.createTable('checkins', {
       id: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
         allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
       },
       student_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'students',
-          key: 'id',
-        },
-        onUpdated: 'CASCADE',
-        onDeleted: 'CASCADE',
+        references: { model: 'students', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
         allowNull: false,
       },
       created_at: {

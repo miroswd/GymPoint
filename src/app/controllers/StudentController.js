@@ -1,7 +1,7 @@
 // Criação do usuário no banco de dados
 import * as Yup from 'yup';
 // Importando o Model
-import Student from '../models/Students';
+import Student from '../models/Student';
 
 class StudentController {
   // Listing all students

@@ -11,18 +11,16 @@ module.exports = {
       },
       student_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'students',
-          key: 'id',
-        },
+        references: { model: 'students', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
         allowNull: false,
       },
       plan_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'plans',
-          key: 'id',
-        },
+        references: { model: 'plans', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
         allowNull: false,
       },
       start_date: {
@@ -33,12 +31,12 @@ module.exports = {
       end_date: {
         // Calculado automaticamente, baseado na duração
         type: Sequelize.DATE,
-        // allowNull: false,
+        allowNull: false,
       },
       price: {
         // Calculado automaticamente (price*duration)
         type: Sequelize.DECIMAL(10, 2),
-        // allowNull: false,
+        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,

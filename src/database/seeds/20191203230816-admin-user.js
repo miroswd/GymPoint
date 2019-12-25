@@ -4,7 +4,6 @@ module.exports = {
   up: queryInterface => {
     return queryInterface.bulkInsert('admins', [
       {
-        id: 9999,
         name: 'Administrador',
         email: 'admin@gympoint.com',
         password: bcrypt.hashSync('123456', 8),

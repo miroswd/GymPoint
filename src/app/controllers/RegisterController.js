@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 // Importing models
 import Register from '../models/Register';
 import Plan from '../models/Plan';
-import Student from '../models/Students';
+import Student from '../models/Student';
 
 // Importing Queue
 import RegisterMail from '../jobs/RegisterMail';
@@ -14,20 +14,24 @@ import Queue from '../../lib/Queue';
 class RegisterController {
   async index(req, res) {
     const { page = 1 } = req.query;
+
     const register = await Register.findAll({
       attributes: ['id', 'start_date', 'end_date', 'price'],
       order: ['start_date'],
       limit: 20,
       offset: (page - 1) * 20,
-      /*
       include: [
         {
+          model: Student,
+          attributes: ['id', 'name', 'age', 'height', 'weight'],
+        },
+        {
           model: Plan,
-          as: 'plan',
           attributes: ['id', 'title', 'duration', 'price'],
         },
-      ], */
+      ],
     });
+
     return res.json(register);
   }
 
@@ -63,12 +67,14 @@ class RegisterController {
 
     // Validating if the student is registered in the database
     const studentExists = await Student.findByPk(student_id);
+
     if (!studentExists) {
       return res.status(400).json({ error: 'The student does not exists' });
     }
 
     // Validating if the plan is registered in the database
     const planExists = await Plan.findByPk(plan_id);
+
     if (!planExists) {
       return res.status(400).json({ error: 'The plan does not exists' });
     }
@@ -99,14 +105,14 @@ class RegisterController {
       start_date: startPast,
     });
 
-    // const student = await register.getStudent();
-    // const plan = await register.getPlan();
+    const student = await register.getStudent();
+    const plan = await register.getPlan();
 
     // Sending email
     await Queue.add(RegisterMail.key, {
-      // student,
-      // plan,
-      registerExists: register,
+      register,
+      plan,
+      student,
     });
 
     return res.json(register);
@@ -144,7 +150,8 @@ class RegisterController {
       return res.status(401).json({ error: 'The date is past' });
     }
 
-    const updatedRegister = await register.update(req.body);
+    const updatedRegister = await register.update({ start_date: startPast });
+
     return res.json(updatedRegister);
   }
 

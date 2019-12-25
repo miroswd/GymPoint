@@ -1,3 +1,4 @@
+import { format, parseISO } from 'date-fns';
 import Mail from '../../lib/Mail';
 
 class RegisterMail {
@@ -12,7 +13,13 @@ class RegisterMail {
       to: `${student.name} <${student.email}>`,
       subject: 'Bem-vindo(a) ao GymPoint',
       template: 'welcome',
-      context: {},
+      context: {
+        name: student.name,
+        firstDay: format(parseISO(register.start_date), 'PPPP'),
+        lastDay: format(parseISO(register.end_date), 'PPPP'),
+        title: plan.title,
+        price: register.price,
+      },
     });
   }
 }

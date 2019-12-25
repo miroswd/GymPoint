@@ -1,21 +1,22 @@
 // Criando o aluno no banco de dados
 import Sequelize, { Model } from 'sequelize';
 
-class Students extends Model {
+class Student extends Model {
   static init(sequelize) {
     super.init(
       {
         name: Sequelize.STRING,
         email: Sequelize.STRING,
         age: Sequelize.INTEGER,
-        height: Sequelize.FLOAT,
-        weight: Sequelize.FLOAT,
+        height: Sequelize.DECIMAL(10, 2),
+        weight: Sequelize.DECIMAL(10, 2),
       },
       {
         sequelize,
       }
     );
+    return this;
   }
 }
 
-export default Students;
+export default Student;

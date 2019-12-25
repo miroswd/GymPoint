@@ -3,16 +3,15 @@ module.exports = {
     return queryInterface.createTable('help_orders', {
       id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
       },
       student_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'students',
-          key: 'id',
-        },
+        references: { model: 'students', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
         allowNull: false,
       },
       question: {
@@ -37,6 +36,7 @@ module.exports = {
       },
     });
   },
+
   down: queryInterface => {
     return queryInterface.dropTable('help_orders');
   },

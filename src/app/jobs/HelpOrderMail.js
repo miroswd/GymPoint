@@ -7,13 +7,13 @@ class HelpOrderMail {
 
   async handle({ data }) {
     const { student, helpOrder } = data;
-
+    console.log('Chegou até aqui');
     await Mail.sendMail({
-      to: `${student} ${student}`,
+      to: `${student.name} <${student.email}>`,
       subject: 'Question Answered',
       template: 'helporder',
       context: {
-        student,
+        name: student.name,
         question: helpOrder.question,
         answer: helpOrder.answer,
       },

@@ -2,8 +2,8 @@
 import { startOfDay, endOfDay, startOfWeek, endOfWeek } from 'date-fns';
 import { Op } from 'sequelize';
 // Importing models
-import Checkin from '../models/Checkins';
-import Student from '../models/Students';
+import Checkin from '../models/Checkin';
+import Student from '../models/Student';
 
 class CheckinController {
   async store(req, res) {

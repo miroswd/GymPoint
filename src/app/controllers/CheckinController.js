@@ -8,10 +8,10 @@ import Student from '../models/Student';
 class CheckinController {
   async store(req, res) {
     const student = await Student.findByPk(req.params.id);
-    const student_id = student.id;
     if (!student) {
       return res.status(400).json({ error: 'The student does not exists' });
     }
+    const student_id = student.id;
 
     // Validating if the student checked today
     const today = new Date();

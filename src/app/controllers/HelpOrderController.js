@@ -11,6 +11,13 @@ class HelpOrderController {
   async index(req, res) {
     const { page = 1 } = req.query;
     const student = req.params.id;
+
+    const studentExists = await Student.findOne({ where: { id: student } });
+
+    if (!studentExists) {
+      return res.status(400).json({ error: 'The student does not exists' });
+    }
+
     const questions = await HelpOrder.findAll({
       where: { student_id: student },
       attributes: ['question', 'created_at', 'answer', 'answer_at'],

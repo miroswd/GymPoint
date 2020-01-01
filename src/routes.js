@@ -24,31 +24,32 @@ routes.post('/students/:id/help-orders', HelpOrderController.store);
 // Requires Auth
 routes.use(AuthMiddlewares);
 
-// Create
-routes.post('/checkins/:id', CheckinController.store);
-routes.post('/plan', PlanController.store);
-routes.post('/register', RegisterController.store);
+// Student
 routes.post('/students', StudentController.store);
-
-// Read
-routes.get('/plans', PlanController.index);
-routes.get('/unanswered/questions', HelpOrderAnswerController.index);
-routes.get('/plan/:id', PlanController.show);
-routes.get('/registers', RegisterController.index);
-
-// Read only
-routes.get('/register/:id', RegisterController.show);
 routes.get('/students', StudentController.index);
 routes.get('/student/:id', StudentController.show);
+routes.put('/student/:id', StudentController.update);
+routes.delete('/delete/student/:id', StudentController.delete);
 
-// Update
-routes.put('/help-orders/:id/answer', HelpOrderAnswerController.update); // Question id
+// Plan
+routes.post('/plan', PlanController.store);
+routes.get('/plans', PlanController.index);
+routes.get('/plan/:id', PlanController.show);
 routes.put('/plan/:id/update', PlanController.update);
-routes.put('/register/:id', RegisterController.update);
-routes.put('/students/:id', StudentController.update);
-
-// Delete
 routes.delete('/plan/:id/delete', PlanController.delete);
+
+// Register
+routes.post('/register', RegisterController.store);
+routes.get('/registers', RegisterController.index);
+routes.get('/register/:id', RegisterController.show);
+routes.put('/register/:id', RegisterController.update);
 routes.delete('/register/:id/delete', RegisterController.delete);
+
+// Checkin
+routes.post('/checkin/:id', CheckinController.store);
+
+// Answer
+routes.get('/unanswered/questions', HelpOrderAnswerController.index);
+routes.put('/help-orders/:id/answer', HelpOrderAnswerController.update); // Question id
 
 export default routes;

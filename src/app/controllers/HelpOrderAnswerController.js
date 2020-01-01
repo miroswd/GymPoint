@@ -26,6 +26,7 @@ class HelpOrderAnswerController {
       include: {
         model: Student,
         as: 'student',
+        attributes: ['id', 'name', 'email'],
       },
     });
 
@@ -43,7 +44,7 @@ class HelpOrderAnswerController {
     }
 
     const helpOrder = await HelpOrder.findByPk(req.params.id);
-    
+
     if (!helpOrder) {
       return res.status(400).json({ error: 'The question does not exists' });
     }
@@ -57,7 +58,7 @@ class HelpOrderAnswerController {
     const { answer } = req.body;
 
     const updated = await helpOrder.update({ answer });
-    
+
     await updated.save();
 
     await Queue.add(HelpOrderMail.key, {

@@ -83,6 +83,10 @@ class StudentController {
     const { email } = req.body;
     const student = await Student.findByPk(req.params.id);
 
+    if (!student) {
+      return res.status(400).json({ error: 'The students does not exists' });
+    }
+
     if (email && email !== student.email) {
       const studentExists = await Student.findOne({ where: { email } });
       if (studentExists) {
@@ -91,6 +95,16 @@ class StudentController {
     }
     const { name, age, height, weight } = await student.update(req.body);
     return res.json({ name, email, age, height, weight });
+  }
+
+  async delete(req, res) {
+    const student = await Student.findByPk(req.params.id);
+
+    if (!student) {
+      return res.status(400).json({ error: 'The student does not exits' });
+    }
+    student.destroy();
+    return res.json('The student has been deleted');
   }
 }
 

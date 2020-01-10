@@ -11,7 +11,7 @@ class RegisterMail {
 
     await Mail.sendMail({
       to: `${student.name} <${student.email}>`,
-      subject: 'Bem-vindo(a) ao GymPoint',
+      subject: 'Welcome to GymPoint',
       template: 'welcome',
       context: {
         name: student.name,

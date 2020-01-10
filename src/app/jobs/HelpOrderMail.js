@@ -16,6 +16,7 @@ class HelpOrderMail {
         name: student.name,
         question: helpOrder.question,
         answer: helpOrder.answer,
+        create: helpOrder.createdAt,
       },
     });
   }

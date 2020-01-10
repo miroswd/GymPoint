@@ -17,8 +17,10 @@ class RegisterMail {
         name: student.name,
         firstDay: format(parseISO(register.start_date), 'PPPP'),
         lastDay: format(parseISO(register.end_date), 'PPPP'),
+        duration: plan.duration,
         title: plan.title,
         price: register.price,
+        id: student.id,
       },
     });
   }

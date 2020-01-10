@@ -1,3 +1,4 @@
+import { format, parseISO } from 'date-fns';
 import Mail from '../../lib/Mail';
 
 class HelpOrderMail {
@@ -16,10 +17,10 @@ class HelpOrderMail {
         name: student.name,
         question: helpOrder.question,
         answer: helpOrder.answer,
-        create: helpOrder.createdAt,
+        create: format(parseISO(helpOrder.createdAt), 'PPPP'),
+        update: format(parseISO(helpOrder.answer_at), 'PPPP'),
       },
     });
   }
 }
-
 export default new HelpOrderMail();

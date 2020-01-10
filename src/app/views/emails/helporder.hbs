@@ -1,6 +1,100 @@
-<p>Hi, {{name}}</p>
-<p>Do you have a new answer on the question:</br>"{{question}}"</p>
-<p>
-<strong>Answer:</strong></br>
-{{answer}}
-</p>
+<style>
+*{
+    margin:0;
+    padding: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+body {
+    max-width:700px;
+    margin: 0 auto 20px;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing:antialiased !important;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+    margin-top:20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 30px;
+    border-bottom:  1px solid #ee4d64;
+}
+
+header span {
+    font-size:13px;
+    font-style: italic;
+    color:#555;
+}
+
+header img{
+    margin-bottom: 10px;
+}
+
+.data {
+    margin-top:30px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 5px 10px;
+}
+
+.title {
+    font-size:17px;
+    margin-bottom:4px ;
+}
+
+.data ul  {
+    list-style: none;
+    line-height: 30px;
+    margin-left: 20px;
+    font-size:16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+
+
+
+.data ul li .destaque{
+    padding: 3px;
+    background-color: #ee4d6541;
+    border-radius: 6px;
+    font-size:12px;
+    font-weight: 600;
+}
+
+
+footer {
+    margin-top:50px;
+    display:flex ;
+    justify-content: center;
+    font-size:13px;
+    font-weight: bold;
+}
+</style>
+
+    <header>
+    <img src="https://github.com/Rocketseat/bootcamp-gostack-desafio-03/blob/master/.github/logo.png?raw=true"/>
+    <h1>{{name}}, Você tem uma resposta</h1>
+    <span>É um prazer inenarrável ter você como membro da Gympoint.</span>
+    </header>
+
+    <div class="data">
+        <p class="title"><strong>Sua pergunta:</strong></p>
+        <p>"{{question}}"</p>
+        <ul>
+            <li><span class="destaque">{{created_at}}</span></li>
+        </ul>
+    </div>
+
+    <div class="data">
+        <p class="title"><strong>Resposta:</strong></p>
+        <p>"{{answer}}"</p>
+        <ul>
+            <li><span class="destaque">{{updated_at}}</span></li>
+        </ul>
+    </div>

@@ -8,4 +8,4 @@ $ sudo docker start redisbarber
 >>> yarn queue
 ```
 
-<a href="https://mailtrap.io/inboxes/771253/messages">abrir o Mailtrap para testar</a>
+<a href="https://mailtrap.io">abrir o Mailtrap para testar</a>
